@@ -1,0 +1,11 @@
+{
+	"name": "extension-ios-audio",
+	"url": "http://www.grapefrukt.com",
+	"license": "MIT",
+	"tags": [],
+	"description": "Makes legacy OpenFL projects respect other audio sources on iOS",
+	"version": "0.0.1",
+	"releasenote": "",
+	"contributors": [ "grapefrukt", "joonturbo" ],
+	"dependencies": {}
+}

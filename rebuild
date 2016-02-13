@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# exit script on error
+set -e
+
+echo "Removing old build products"
+
+# remove old stuff
+rm -rf ndll
+rm -rf project/obj
+
+echo "Building native libraries for OpenFL"
+
+# generate native libraries
+lime rebuild ./project ios -clean
+
+echo "Complete!"
