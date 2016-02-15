@@ -15,33 +15,27 @@
 
 using namespace openfliosaudio;
 
-static value iosaudio_enableduck()
-{
-	#ifdef IPHONE
-	enableduck();
-	#endif
+static value iosaudio_fixinterrupt() {
+	fixinterrupt();
 	return alloc_null();
 }
-DEFINE_PRIM (iosaudio_enableduck, 0);;
+DEFINE_PRIM (iosaudio_fixinterrupt, 0);;
 
-static value iosaudio_disableduck()
-{
-	#ifdef IPHONE
-	disableduck();
-	#endif
+static value iosaudio_enableambient() {
+	enableambient();
 	return alloc_null();
 }
-DEFINE_PRIM (iosaudio_disableduck, 0);;
+DEFINE_PRIM (iosaudio_enableambient, 0);;
 
-static value iosaudio_hasexternalmusicplaying()
-{
-	#ifdef IPHONE
+static value iosaudio_disableambient() {
+	disableambient();
+	return alloc_null();
+}
+DEFINE_PRIM (iosaudio_disableambient, 0);;
+
+static value iosaudio_hasexternalmusicplaying() {
 	return alloc_bool(hasexternalmusicplaying());
-	#else
-	return alloc_null();
-	#endif
 }
 DEFINE_PRIM(iosaudio_hasexternalmusicplaying, 0);
-
 
 extern "C" int extension_ios_audio_register_prims() { return 0; }

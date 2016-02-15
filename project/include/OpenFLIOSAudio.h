@@ -2,8 +2,9 @@
 #define OPENFLIOSAUDIO_H
 
 namespace openfliosaudio {
-	void enableduck();
-	void disableduck();
+	void fixinterrupt();
+	void enableambient();
+	void disableambient();
 	bool hasexternalmusicplaying();
 }
 

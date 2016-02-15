@@ -10,13 +10,14 @@
 typedef void (*FunctionType)();
 
 static ALCcontext *alcContext = nil;
+static BOOL isAmbient = false;
 
-@interface GlitchIOSWrapper : NSObject {
+@interface InterruptObserver : NSObject {
 }
-- (void)onAudioSessionEvent: (NSNotification *) notification;
+- (void) onAudioSessionEvent: (NSNotification *) notification;
 @end
 
-@implementation GlitchIOSWrapper
+@implementation InterruptObserver
 
 - (void) onAudioSessionEvent: (NSNotification *) notification
 {
@@ -41,17 +42,19 @@ static ALCcontext *alcContext = nil;
 			AVAudioSession *session = [AVAudioSession sharedInstance];
 			[session setActive: YES error: nil];
 
-
-			// Reset audio session
-			//UInt32 category = kAudioSessionCategory_AmbientSound;
-			//AudioSessionSetProperty ( kAudioSessionProperty_AudioCategory, sizeof (category), &category );
+			// The ambient property gets lots when the session is deactivated, so that needs to be set again
+			if (isAmbient) {
+				UInt32 category = kAudioSessionCategory_AmbientSound;
+				AudioSessionSetProperty ( kAudioSessionProperty_AudioCategory, sizeof (category), &category );
+			}
 				
 			// Reactivate the current audio session
 			AudioSessionSetActive(YES);
 				
-			// Restore open al context
+			// Restore OpenAL context
 			alcMakeContextCurrent(alcContext);
-			// 'unpause' my context
+
+			// finally, 'unpause' the context
 			alcProcessContext(alcContext);
 		}
 	}
@@ -61,25 +64,39 @@ static ALCcontext *alcContext = nil;
 
 namespace openfliosaudio {
 
-	void enableduck() {
+	void fixinterrupt() {
+		// get the shared audio session
 		AVAudioSession *session = [AVAudioSession sharedInstance];
 
-		NSError *setCategoryError = nil;
-		if (![session setCategory:AVAudioSessionCategoryAmbient
-				 withOptions:AVAudioSessionCategoryOptionMixWithOthers
-				 error:&setCategoryError]) {
-			// handle error
-			NSLog(@"ERROR SETTING AVAUDIOSESSION");
-		}
-		NSLog(@"SETTING AVAUDIOSESSION TO DUCK (play others)");
-
-		[[NSNotificationCenter defaultCenter] addObserver: [[GlitchIOSWrapper alloc] init]
+		[[NSNotificationCenter defaultCenter] addObserver: [[InterruptObserver alloc] init]
 			selector: @selector(onAudioSessionEvent:)
 			name: AVAudioSessionInterruptionNotification
 			object: session];
 	}
 
-	void disableduck() {
+	void enableambient() {
+		isAmbient = true;
+
+		// get the shared audio session
+		AVAudioSession *session = [AVAudioSession sharedInstance];
+
+		NSError *setCategoryError = nil;
+
+		// set it as ambient
+		if (![session setCategory:AVAudioSessionCategoryAmbient
+				 withOptions:AVAudioSessionCategoryOptionMixWithOthers
+				 error:&setCategoryError]) {
+			// it'd be nice to handle the error here, but i don't know what to do with it
+			//NSLog(@"ERROR SETTING AVAUDIOSESSION");
+		}
+		//NSLog(@"SETTING AVAUDIOSESSION TO DUCK (play others)");
+	}
+
+	void disableambient() {
+		// same thing as enable, but different category
+
+		isAmbient = false;
+
 		AVAudioSession *session = [AVAudioSession sharedInstance];
 
 		NSError *setCategoryError = nil;
@@ -87,9 +104,9 @@ namespace openfliosaudio {
 				 withOptions:AVAudioSessionCategoryOptionDuckOthers
 				 error:&setCategoryError]) {
 			// handle error
-			NSLog(@"ERROR SETTING AVAUDIOSESSION");
+			//NSLog(@"ERROR SETTING AVAUDIOSESSION");
 		}
-		NSLog(@"SETTING AVAUDIOSESSION TO NOT DUCK (duck others)");
+		//NSLog(@"SETTING AVAUDIOSESSION TO NOT DUCK (duck others)");
 	}
 	
 	bool hasexternalmusicplaying() {

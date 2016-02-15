@@ -22,13 +22,17 @@ This extension was originally built by [Joon for Glitchnap](http://www.glitchnap
 Usage
 =====
 
-This extension provides three functions, use them as follows:
+This extension provides four functions, use them as follows:
 
 ```haxe
 #if ios
+	// to fix the audio going silent on interruptions, call this function _once_ 
+	// as your game starts
+	extension.iosaudio.IOSAudio.fixInterrupt();
+
 	// to enable audio ducking (ie. allowing other things to play audio
 	// over your game) call this immediately on startup
-	extension.iosaudio.IOSAudio.enableDuck();
+	extension.iosaudio.IOSAudio.enableAmbient();
 
 	// you can use the hasExternalMusicPlaying property to decide whether 
 	// to play your own music or not
@@ -40,6 +44,6 @@ This extension provides three functions, use them as follows:
 
 	// should you ever want to put things back the way they were you can
 	// disable ducking again
-	extension.iosaudio.IOSAudio.disableDuck();
+	extension.iosaudio.IOSAudio.disableAmbient();
 #end
 ```
