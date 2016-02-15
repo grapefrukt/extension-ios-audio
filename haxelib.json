@@ -4,7 +4,7 @@
 	"license": "MIT",
 	"tags": [],
 	"description": "Makes legacy OpenFL projects respect other audio sources on iOS",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"releasenote": "",
 	"contributors": [ "grapefrukt", "joonturbo" ],
 	"dependencies": {}
