@@ -19,7 +19,7 @@
 		
 	</files>
 	
-	<target id="NDLL" output="${LIBPREFIX}extension-ios-audio${debug_extra}${LIBEXTRA}" tool="linker" toolid="${STD_MODULE_LINK}">
+	<target id="NDLL" output="${LIBPREFIX}extension_ios_audio${debug_extra}${LIBEXTRA}" tool="linker" toolid="${STD_MODULE_LINK}">
 		
 		<outdir name="../ndll/${BINDIR}"/>
 		
